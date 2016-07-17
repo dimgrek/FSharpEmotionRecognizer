@@ -25,22 +25,22 @@ type App() =
         | false -> result.Text <- result.Text + "[" + DateTime.Now.ToString("HH:mm:ss.ffffff")  + "]: " + logMessage + "\n" 
         
 
-    let UploadAndDetectEmotions(url:string) = async{
-    let emotionClientService = EmotionServiceClient(subscriptionKey)
-    return emotionClientService.RecognizeAsync(url)}
+    let UploadAndDetectEmotions(url:string) = EmotionServiceClient(subscriptionKey)
+
+    let emotion = async {
+        let emotionClientService = new EmotionServiceClient(subscriptionKey)
+        emotionClientService.RecognizeAsync(uri)}
+
+    
 
     let logEmotionResult (emotionResult : Emotion[]) = 
         let emotionResultCount = 0
-        match emotionResult<> null && emotionResult.Length>0 with
-        | true -> for emotion in emotionResult do log("Emotion[" + emotionResultCount + "]")
-        do emotionResultCount++
-        | false -> log("No emotion is detected. This might be due to:\n" +
-                    "    image is too small to detect faces\n" +
-                    "    no faces are in the images\n" +
-                    "    faces poses make it difficult to detect emotions\n" +
-                    "    or other factors")
-                
+        match emotionResult<> null && emotionResult.Length>0 wih
+        | true -> for emotion in emotionResult do log("Emotion[" + emotionResultCount.ToString() + "]")
+        | false -> log("No emotion is detected. This might be due to:\n" + "    image is too small to detect faces\n" + "    no faces are in the images\n" + "    faces poses make it difficult to detect emotions\n" + "    or other factors")
     
+    let Async.StartAsTask <| emotion
+
 
     //do sendButton.Clicked.Add(fun _->
     //do result.Text <- UploadAndDetectEmotions uri)
@@ -56,7 +56,6 @@ type App() =
         stack.Children.Add(label)
         stack.Children.Add(downloaded)
         stack.Children.Add(webImage)
-        //stack.Children.Add(timesClicked)
         stack.Children.Add(sendButton)
         base.MainPage <- ContentPage(Content = stack)
 
