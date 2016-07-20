@@ -1,61 +1,61 @@
 ﻿namespace FsharpTest
 
 open Xamarin.Forms
-open Microsoft.ProjectOxford.Emotion
-open Microsoft.ProjectOxford.Emotion.Contract
+open System.Text
+open System.IO
+open System.Net
 open System
+open FSharp.Data
 
 type App() = 
     inherit Application()
-    let uri = "https://www.xamarin.com/content/images/pages/forms/example-app.png"
+    let uri = "https://s-media-cache-ak0.pinimg.com/736x/08/15/db/0815db06df850e27e74411a3232ffa3e.jpg"
     let subscriptionKey = "40778dfbd2884ee4870526cf17cc15bd"
-    let mutable number = 0
-    let stack = StackLayout(VerticalOptions = LayoutOptions.Center)
+    let scroll = ScrollView()
+    let stack = StackLayout(VerticalOptions = LayoutOptions.Center, Padding = new Thickness(5.0, 20.0, 5.0, 5.0))
     let label = Label(XAlign = TextAlignment.Center, Text = "Emotion Recognizer")
-    let downloaded = Label(XAlign = TextAlignment.Center, Text = "Downloaded Image")
     let webImage = Image(Aspect = Aspect.AspectFit, Source = ImageSource.FromUri(Uri(uri)))
-    let result = Label(XAlign = TextAlignment.Center, Text = "Emotion will be stated here")
+    let sendButton = Button(Text = "Send picture")
+    let statusLabel = Label(XAlign = TextAlignment.Center, Text = "Emotion will be stated here")
     
 
-    let sendButton = Button(Text = "Send picture")
 
-    let log (logMessage:string) = 
-        match String.IsNullOrEmpty(logMessage) || logMessage = "\n" with
-        | true -> result.Text <- result.Text + "\n"
-        | false -> result.Text <- result.Text + "[" + DateTime.Now.ToString("HH:mm:ss.ffffff")  + "]: " + logMessage + "\n" 
+    //let log (logMessage:string) = 
+    //    match String.IsNullOrEmpty(logMessage) || logMessage = "\n" with
+    //    | true -> statusLabel.Text <- statusLabel.Text + "\n"
+    //    | false -> statusLabel.Text <- statusLabel.Text + "[" + DateTime.Now.ToString("HH:mm:ss.ffffff")  + "]: " + logMessage + "\n" 
         
 
-    let UploadAndDetectEmotions(url:string) = EmotionServiceClient(subscriptionKey)
+    //let UploadAndDetectEmotions(url:string) = EmotionServiceClient(subscriptionKey)
 
-    let emotion = async {
-        let emotionClientService = new EmotionServiceClient(subscriptionKey)
-        emotionClientService.RecognizeAsync(uri)}
+    //let emotion = 
+    //    let emotionClientService = new EmotionServiceClient(subscriptionKey)
+    //    try
+    //    emotionClientService.RecognizeAsync(uri)
+    //    with
+    //    | ex -> statusLabel.Text <- ex.Message ; null
 
     
-
-    let logEmotionResult (emotionResult : Emotion[]) = 
-        let emotionResultCount = 0
-        match emotionResult<> null && emotionResult.Length>0 wih
-        | true -> for emotion in emotionResult do log("Emotion[" + emotionResultCount.ToString() + "]")
-        | false -> log("No emotion is detected. This might be due to:\n" + "    image is too small to detect faces\n" + "    no faces are in the images\n" + "    faces poses make it difficult to detect emotions\n" + "    or other factors")
+    //let logEmotionResult (emotionResult : Emotion[]) = 
+    //    let emotionResultCount = 0
+    //    match emotionResult<> null && emotionResult.Length>0 with
+    //    | true -> for emotion in emotionResult do log("Emotion[" + emotionResultCount.ToString() + "]")
+    //    | false -> log("No emotion is detected. This might be due to:\n" + "    image is too small to detect faces\n" + "    no faces are in the images\n" + "    faces poses make it difficult to detect emotions\n" + "    or other factors")
     
-    let Async.StartAsTask <| emotion
+    
 
 
-    //do sendButton.Clicked.Add(fun _->
-    //do result.Text <- UploadAndDetectEmotions uri)
+    //do sendButton.Clicked.Add(fun _ ->)
 
-    //do sendButton.Clicked.Add(fun _ -> 
-    //number <- number + 1
-    //do timesClicked.Text<- sprintf "%i times clicked" number)
 
 
 
 
     do 
         stack.Children.Add(label)
-        stack.Children.Add(downloaded)
         stack.Children.Add(webImage)
         stack.Children.Add(sendButton)
+        stack.Children.Add(scroll)
+        scroll.Content <- statusLabel
         base.MainPage <- ContentPage(Content = stack)
 
